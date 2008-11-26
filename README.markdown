@@ -12,7 +12,7 @@ some hubbub:
 INSTALL
 -------
 If you're viewing this page from your GitHub Fluid App, just
-[click here](http://userscripts.org/scripts/source/37620.user.js).
+[click here](http://github.com/stephencelis/githubbub/raw/master/githubbub.user.js).
 
 If you've downloaded this userscript, drag "githubbub.user.js" to your GitHub
 Fluid app.
