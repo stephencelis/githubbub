@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        GitHubbub
-// @description A bit of hubbub for Github: Growl/Dock notifications, and more.
+// @description Hubbub for Fluid Github: Growl/Dock notifications, and more.
 // @namespace   http://stephencelis.com/
 // @homepage    http://github.com/stephencelis/githubbub/
 // @author      Stephen Celis
