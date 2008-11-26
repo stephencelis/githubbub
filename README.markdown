@@ -1,11 +1,20 @@
 GitHubbub
 =========
 
-GitHubbub gives the GitHub Fluid app some hubbub:
+GitHubbub gives the GitHub [Fluid app](http://fluidapp.com) some hubbub:
 
 * Auto-updating News Feed
 * Growl notifications for News Feed alerts
 * Dock badge with number of new messages
+
+
+INSTALL
+-------
+If you're viewing this page from your GitHub Fluid App, just
+[click here](http://github.com/stephencelis/githubbub/tree/master%2Fgithubbub.user.js?raw=true).
+
+If you've downloaded this userscript, drag "githubbub.user.js" to your GitHub
+Fluid app.
 
 
 LICENSE
