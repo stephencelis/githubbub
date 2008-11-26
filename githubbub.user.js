@@ -17,7 +17,7 @@
 		var icon = $(".gravatar img", imported).attr("src").replace("?s=30&", "?s=128");
 		// Make default Gravatar bigger; FIXME: render GitHub icon instead?
 		icon = icon.replace("-30.", "-50.");
-		var identifier = $(".details p", imported)[0].innerText;
+		var identifier = $(".details .message", imported)[0].innerText;
 
 		window.fluid.showGrowlNotification({
 			title: title,
