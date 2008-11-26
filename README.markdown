@@ -1,7 +1,8 @@
 GitHubbub
 =========
 
-GitHubbub gives the GitHub [Fluid app](http://fluidapp.com) some hubbub:
+GitHubbub gives the [GitHub Fluid app](http://github.com/blog/47-new-fluid-icon)
+some hubbub:
 
 * Auto-updating News Feed
 * Growl notifications for News Feed alerts
