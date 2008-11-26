@@ -14,9 +14,11 @@
 		var timestamp = $(".title abbr", imported)[0].innerText;
 		var title = $(".title", imported)[0].innerText.replace(timestamp, "");
 		var description = $(".details .message", imported)[0].innerText;
-		var icon = $(".gravatar img", imported).attr("src").replace("?s=30&", "?s=128");
-		// Make default Gravatar bigger; FIXME: render GitHub icon instead?
-		icon = icon.replace("-30.", "-50.");
+		var icon = $(".gravatar img", imported).attr("src")
+		if (icon) // Make default Gravatar bigger; FIXME: render GitHub icon instead?
+			icon = icon.replace("?s=30&", "?s=128").replace("-30.", "-50.");
+		else if (icon = $(".identity img").attr("src"))
+			icon = icon.replace("?s=50&", "?s=128");
 		var identifier = $(".details .message", imported)[0].innerText;
 
 		window.fluid.showGrowlNotification({
