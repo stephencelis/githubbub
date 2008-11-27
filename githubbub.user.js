@@ -46,14 +46,21 @@
 
 			for (var i = remoteAlerts.length; i > 0; --i) {
 				var remoteAlert = document.importNode(remoteAlerts[i - 1], true);
-				if (switched)
+				if (switched && !sameTime(remoteAlert, localAlert))
 					importAlert(remoteAlert);
-				if ($(".message", remoteAlert).text() == $(".message", localAlert).text())
+				if (sameTime(remoteAlert, localAlert))
 					switched = true;
 			}
-			if (!switched)
+			if (!switched) {
 				importAll(remoteAlerts);
+			}
 		}
+	}
+
+	var sameTime = function (alertOne, alertTwo) {
+		var oneTimestamp = $(".title abbr", alertOne).attr("title");
+		var twoTimestamp = $(".title abbr", alertTwo).attr("title");
+		return oneTimestamp == twoTimestamp;
 	}
 
 	var setCount = function (doc) {
