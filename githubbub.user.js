@@ -4,16 +4,24 @@
 // @namespace   http://stephencelis.com/
 // @homepage    http://github.com/stephencelis/githubbub/
 // @author      Stephen Celis
-// @include     https://github.com/*
+// @include     http*://github.com/*
 // ==/UserScript==
 
 (function () {
+	var activate = function (node) {
+		window.fluid.activate();
+		$(".commits", node).show();
+	}
+
 	var importAlert = function (imported) {
 		$(".feed_filter").after(imported);
 
 		var timestamp = $(".title abbr", imported)[0].innerText;
 		var title = $(".title", imported)[0].innerText.replace(timestamp, "");
-		var description = $(".details .message", imported)[0].innerText;
+		var descriptions = $(".details .message", imported)
+		var description = descriptions[0].innerText.replace(/^\s*|\s*$/g, "");
+		if (descriptions.length > 1)
+			description = description + "\n\n(And " + (descriptions.length - 1) + " more commits...)"
 		var icon = $(".gravatar img", imported).attr("src")
 		if (icon) // Make default Gravatar bigger; FIXME: render GitHub icon instead?
 			icon = icon.replace("?s=30&", "?s=128").replace("-30.", "-50.");
@@ -26,7 +34,7 @@
 			description: description,
 			icon: icon,
 			identifier: identifier,
-			onclick: function() { window.fluid.activate() }
+			onclick: function() { activate(imported) }
 		});
 	}
 
@@ -46,21 +54,16 @@
 
 			for (var i = remoteAlerts.length; i > 0; --i) {
 				var remoteAlert = document.importNode(remoteAlerts[i - 1], true);
-				if (switched && !sameTime(remoteAlert, localAlert))
+				if (moreRecent(remoteAlert, localAlert))
 					importAlert(remoteAlert);
-				if (sameTime(remoteAlert, localAlert))
-					switched = true;
-			}
-			if (!switched) {
-				importAll(remoteAlerts);
 			}
 		}
 	}
 
-	var sameTime = function (alertOne, alertTwo) {
-		var oneTimestamp = $(".title abbr", alertOne).attr("title");
-		var twoTimestamp = $(".title abbr", alertTwo).attr("title");
-		return oneTimestamp == twoTimestamp;
+	var moreRecent = function (alertOne, alertTwo) {
+		var oneTime = toTime($(".title abbr", alertOne).attr("title"));
+		var twoTime = toTime($(".title abbr", alertTwo).attr("title"));
+		return oneTime > twoTime;
 	}
 
 	var setCount = function (doc) {
@@ -74,7 +77,7 @@
 
 	var reRelatizeDates = function () {
 		$(".relatize").each(function () {
-			var timestamp = new Date(reformatTime($(this).attr("title")));
+			var timestamp = toTime($(this).attr("title"));
 			$(this).text($.relatizeDate.timeAgoInWords(timestamp));
 		});
 	}
@@ -83,6 +86,11 @@
 		var parts = string.split(/\s|\-/);
 		var monthName = $.relatizeDate.shortMonths[parts[1] - 1];
 		return monthName + " " + parts[2] + " " + parts[3] + " -800 " + parts[0];
+	}
+
+	var toTime = function (string) {
+		var time = new Date(reformatTime(string));
+		return time;
 	}
 
 	// Run...
