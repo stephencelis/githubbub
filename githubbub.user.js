@@ -32,9 +32,16 @@
 		var title = $(".title", imported)[0].innerText.replace(timestamp, "");
 		var descriptions = $(".details .message", imported)
 		var description = descriptions[0].innerText.replace(/^\s*|\s*$/g, "");
-		if (descriptions.length > 1)
+		if (descriptions.length > 1) {
 			description = description + "\n\n(And " +
 				pluralize("more commit", descriptions.length - 1) + ")";
+			$('.reveal_commits, .hide_commits', imported).click(function () {
+				var div = $(this).parents('.details');
+				div.find('.reveal, .hide_commits, .commits').toggle();
+				return false;
+			});
+			
+		}
 		var icon = $(".gravatar img", imported).attr("src")
 		if (icon) // Make default Gravatar bigger; FIXME: render GitHub icon instead?
 			icon = icon.replace(/\?s=\d0&/, "?s=128");
