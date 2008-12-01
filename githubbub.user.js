@@ -8,41 +8,6 @@
 // ==/UserScript==
 
 (function () {
-	var activate = function (node) {
-		window.fluid.activate();
-		$(".commits", node).show();
-	}
-
-	var importAlert = function (imported) {
-		$(".feed_filter").after(imported);
-
-		var timestamp = $(".title abbr", imported)[0].innerText;
-		var title = $(".title", imported)[0].innerText.replace(timestamp, "");
-		var descriptions = $(".details .message", imported)
-		var description = descriptions[0].innerText.replace(/^\s*|\s*$/g, "");
-		if (descriptions.length > 1)
-			description = description + "\n\n(And " + (descriptions.length - 1) + " more commits...)"
-		var icon = $(".gravatar img", imported).attr("src")
-		if (icon) // Make default Gravatar bigger; FIXME: render GitHub icon instead?
-			icon = icon.replace("?s=30&", "?s=128").replace("-30.", "-50.");
-		else if (icon = $(".identity img").attr("src"))
-			icon = icon.replace("?s=50&", "?s=128");
-		var identifier = $(".details .message", imported)[0].innerText;
-
-		window.fluid.showGrowlNotification({
-			title: title,
-			description: description,
-			icon: icon,
-			identifier: identifier,
-			onclick: function() { activate(imported) }
-		});
-	}
-
-	var importAll = function (remoteAlerts) {
-		for (var i = remoteAlerts.length; i > 0; --i)
-			importAlert(document.importNode(remoteAlerts[i - 1], true));
-	}
-
 	var parseResponse = function (data) {
 		var xmlDoc = new DOMParser().parseFromString(data, "application/xhtml+xml");
 		$(".relatize", xmlDoc).relatizeDate();
@@ -60,10 +25,38 @@
 		}
 	}
 
-	var moreRecent = function (alertOne, alertTwo) {
-		var oneTime = toTime($(".title abbr", alertOne).attr("title"));
-		var twoTime = toTime($(".title abbr", alertTwo).attr("title"));
-		return oneTime > twoTime;
+	var importAlert = function (imported) {
+		$(".feed_filter").after(imported);
+
+		var timestamp = $(".title abbr", imported)[0].innerText;
+		var title = $(".title", imported)[0].innerText.replace(timestamp, "");
+		var descriptions = $(".details .message", imported)
+		var description = descriptions[0].innerText.replace(/^\s*|\s*$/g, "");
+		if (descriptions.length > 1)
+			description = description + "\n\n(And " +
+				pluralize("more commit", descriptions.length - 1) + ")";
+		var icon = $(".gravatar img", imported).attr("src")
+		if (icon) // Make default Gravatar bigger; FIXME: render GitHub icon instead?
+			icon = icon.replace(/\?s=\d0&/, "?s=128");
+		var identifier = $(".details .message", imported)[0].innerText;
+
+		window.fluid.showGrowlNotification({
+			title: title,
+			description: description,
+			icon: icon,
+			identifier: identifier,
+			onclick: function() { activate(imported) }
+		});
+	}
+
+	var importAll = function (remoteAlerts) {
+		for (var i = remoteAlerts.length; i > 0; --i)
+			importAlert(document.importNode(remoteAlerts[i - 1], true));
+	}
+
+	var activate = function (node) {
+		window.fluid.activate();
+		$(".commits", node).show();
 	}
 
 	var setCount = function (doc) {
@@ -75,11 +68,22 @@
 		window.fluid.dockBadge = unreadCount > 0 ? unreadCount : null;
 	}
 
+	var moreRecent = function (alertOne, alertTwo) {
+		var oneTime = toTime($(".title abbr", alertOne).attr("title"));
+		var twoTime = toTime($(".title abbr", alertTwo).attr("title"));
+		return oneTime > twoTime;
+	}
+
 	var reRelatizeDates = function () {
 		$(".relatize").each(function () {
 			var timestamp = toTime($(this).attr("title"));
 			$(this).text($.relatizeDate.timeAgoInWords(timestamp));
 		});
+	}
+
+	var toTime = function (string) {
+		var time = new Date(reformatTime(string));
+		return time;
 	}
 
 	var reformatTime = function (string) {
@@ -88,9 +92,10 @@
 		return monthName + " " + parts[2] + " " + parts[3] + " -800 " + parts[0];
 	}
 
-	var toTime = function (string) {
-		var time = new Date(reformatTime(string));
-		return time;
+	var pluralize = function (string, number) {
+		if (number != 1)
+			string = string + "s"
+		return number + " " + string;
 	}
 
 	// Run...
@@ -98,5 +103,5 @@
 	setInterval(function () {
 		$.get(window.location.href, function (data) { parseResponse(data); });
 		reRelatizeDates();
-	}, 120 * 1000)
+	}, 120 * 1000);
 })();
