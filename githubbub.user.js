@@ -63,7 +63,8 @@
 
 	var activate = function (node) {
 		window.fluid.activate();
-		$(".commits", node).show();
+		$(node).find('.reveal, .hide_commits, .commits').toggle();
+		return false;
 	}
 
 	var setCount = function (doc) {
