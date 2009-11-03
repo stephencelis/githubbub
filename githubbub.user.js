@@ -70,9 +70,9 @@
 	var setCount = function (doc) {
 		if (typeof doc == "undefined")
 			doc = document;
-		var unreadCount = $(".inbox a", doc).text();
+		var unreadCount = $(".unread_count", doc).text();
 		if (doc != document);
-			$(".inbox a").text(unreadCount);
+			$(".unread_count").text(unreadCount);
 		window.fluid.dockBadge = unreadCount > 0 ? unreadCount : null;
 	}
 
