@@ -70,9 +70,13 @@
 	var setCount = function (doc) {
 		if (typeof doc == "undefined")
 			doc = document;
-		var unreadCount = $(".unread_count", doc).text();
-		if (doc != document);
-			$(".unread_count").text(unreadCount);
+		var unreadMessagesCount = $(".usernav .unread_count", doc).text();
+		var unreadNotificationCount = $(".notifications_count", doc).text();
+		var unreadCount = parseInt(unreadMessagesCount) + parseInt(unreadNotificationCount);
+		if (doc != document) {
+			$(".usernav .unread_count").text(unreadMessagesCount);
+			$(".notifications_count", doc).text(unreadNotificationCount);
+		}
 		window.fluid.dockBadge = unreadCount > 0 ? unreadCount : null;
 	}
 
